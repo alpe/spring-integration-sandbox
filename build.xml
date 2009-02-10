@@ -1,0 +1,10 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="hello-ivy" default="retrieve">
+
+    
+    <!-- ================================= 
+          target: resolve              
+         ================================= -->
+    <target name="retrieve" description="--> retrieve dependencies with ivy">
+        <ivy:retrieve />
+    </target>
+</project>

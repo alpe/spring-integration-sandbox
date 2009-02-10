@@ -1,0 +1,37 @@
+<ivy-module version="2.0">
+    <info organisation="de.alpe" module="spring-integration-ext">
+    	<!--  TODO: define license name="Apache 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/> -->
+		<ivyauthor name="Alex Peters"/>
+	</info>
+
+	<configurations>
+		<!-- Maven equivalent configurations -->
+		<conf name="compile" visibility="public" extends="aspects" description="Maven compile dependencies"/>
+		<conf name="optional" visibility="public" extends="compile" description="Maven optional dependencies"/>
+		<conf name="provided" visibility="public" description="Maven provided dependencies"/> 
+		<!-- conf name="dm-server-provided" visibility="public" description="Maven provided dependencies that already exist in the platform"/> -->
+		<conf name="runtime" visibility="public" extends="compile" description="Runtime dependencies"/>
+		<conf name="test" visibility="private" description="Test dependencies"/>
+		<!-- Aspect weaving configuration -->
+		<conf name="aspects" visibility="private" description="Aspects to be woven"/> 
+		<!-- conf name="external" visibility="private" description="External candidates to be woven"/> -->
+	</configurations>
+	    
+	<dependencies>
+		<dependency org="javax.activation" name="com.springsource.javax.activation" rev="1.1.1" conf="provided->runtime"/>
+		<dependency org="javax.jms" name="com.springsource.javax.jms" rev="1.1.0" conf="provided->runtime"/>
+		<dependency org="org.apache.activemq" name="com.springsource.org.apache.activemq" rev="5.1.0" conf="optional->runtime">
+			<exclude org="org.springframework"/>
+		</dependency>
+		<dependency org="org.apache.geronimo.specs" name="com.springsource.javax.management.j2ee" rev="1.0.1" conf="provided->compile"/>
+		<dependency org="org.junit" name="com.springsource.org.junit" rev="4.4.0" conf="test->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.aop" rev="2.5.6.A" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="2.5.6.A" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.jms" rev="2.5.6.A" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.transaction" rev="2.5.6.A" conf="compile->runtime"/>
+		<dependency org="org.springframework.integration" name="org.springframework.integration" rev="1.0.1.RELEASE" conf="compile->compile"/>
+		<dependency org="org.springframework.integration" name="org.springframework.integration.ws" rev="1.0.1.RELEASE" conf="compile->compile"/>
+		<dependency org="org.springframework.integration" name="org.springframework.integration.xml" rev="1.0.1.RELEASE" conf="compile->compile"/>
+	</dependencies>
+    
+</ivy-module>
