@@ -6,15 +6,11 @@
 
 	<configurations>
 		<!-- Maven equivalent configurations -->
-		<conf name="compile" visibility="public" extends="aspects" description="Maven compile dependencies"/>
+		<conf name="compile" visibility="public"  description="Maven compile dependencies"/>
 		<conf name="optional" visibility="public" extends="compile" description="Maven optional dependencies"/>
 		<conf name="provided" visibility="public" description="Maven provided dependencies"/> 
-		<!-- conf name="dm-server-provided" visibility="public" description="Maven provided dependencies that already exist in the platform"/> -->
 		<conf name="runtime" visibility="public" extends="compile" description="Runtime dependencies"/>
 		<conf name="test" visibility="private" description="Test dependencies"/>
-		<!-- Aspect weaving configuration -->
-		<conf name="aspects" visibility="private" description="Aspects to be woven"/> 
-		<!-- conf name="external" visibility="private" description="External candidates to be woven"/> -->
 	</configurations>
 	    
 	<dependencies>
@@ -32,6 +28,15 @@
 		<dependency org="org.springframework.integration" name="org.springframework.integration" rev="1.0.1.RELEASE" conf="compile->compile"/>
 		<dependency org="org.springframework.integration" name="org.springframework.integration.ws" rev="1.0.1.RELEASE" conf="compile->compile"/>
 		<dependency org="org.springframework.integration" name="org.springframework.integration.xml" rev="1.0.1.RELEASE" conf="compile->compile"/>
+				<dependency org="org.springframework.integration" name="org.springframework.integration.stream" rev="1.0.1.RELEASE" conf="compile->compile"/>
+		<dependency org="org.springframework.javaconfig" name="org.springframework.config.java" rev="1.0.0.M4" conf="compile->compile"/>
+		<dependency org="com.espertech" name="esper" rev="2.3.0" conf="compile->default"/>
+		<!-- esper dependencies -->
+		<dependency org="org.antlr" name="antlr-runtime" rev="3.0.1" conf="compile->default"/>
+		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" conf="compile->default"/>
+		<dependency org="cglib" name="cglib-nodep" rev="2.1_3" conf="compile->default"/> 
+		
+		
 	</dependencies>
     
 </ivy-module>

@@ -11,12 +11,23 @@
 			<ivy pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			<artifact pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 		</url>
+		<url name="spring-milestone">
+			<ivy pattern="http://repository.springsource.com/ivy/bundles/milestone/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			<artifact pattern="http://repository.springsource.com/ivy/bundles/milestone/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>		
+		<url name="codehaus">
+			<ivy pattern="http://repository.codehaus.org//[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			<artifact pattern="http://repository.codehaus.org/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>
+		
 		<ibiblio name="public" m2compatible="true" />
 
 		<chain name="main" dual="true">
 			<resolver ref="spring-release" />
 			<resolver ref="spring-external" />
+			<resolver ref="codehaus" />
 			<resolver ref="public" />
+			<resolver ref="spring-milestone" />
 		</chain>
 		<chain name="default" returnFirst="true">
 			<resolver ref="main" />
