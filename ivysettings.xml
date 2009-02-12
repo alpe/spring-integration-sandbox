@@ -16,7 +16,7 @@
 			<artifact pattern="http://repository.springsource.com/ivy/bundles/milestone/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 		</url>		
 		<url name="codehaus">
-			<ivy pattern="http://repository.codehaus.org//[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			<ivy pattern="http://repository.codehaus.org/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			<artifact pattern="http://repository.codehaus.org/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 		</url>
 		

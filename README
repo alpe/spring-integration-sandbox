@@ -18,7 +18,6 @@ Esper integration
 Quote order durations via Ester framework. 
  
 * Postprocesser to add channel interceptors that send message payloads to Ester
-* renamed Order class to avoid conflict with reserved Ester keywords
 * added timestamps to order and delivery
 * spring annotation based java config 
 * Ester EPL Statement to fetch timestamps 

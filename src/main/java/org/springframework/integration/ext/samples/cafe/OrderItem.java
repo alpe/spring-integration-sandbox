@@ -28,16 +28,16 @@ public class OrderItem {
 
     private boolean iced = false;
 
-    private final DrinkOrder order;
+    private final Order order;
 
-    public OrderItem(DrinkOrder order, DrinkType type, int shots, boolean iced) {
+    public OrderItem(Order order, DrinkType type, int shots, boolean iced) {
 	this.order = order;
 	this.type = type;
 	this.shots = shots;
 	this.iced = iced;
     }
 
-    public DrinkOrder getOrder() {
+    public Order getOrder() {
 	return this.order;
     }
 

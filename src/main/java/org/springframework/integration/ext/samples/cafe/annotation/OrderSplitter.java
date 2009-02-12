@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Splitter;
-import org.springframework.integration.ext.samples.cafe.DrinkOrder;
+import org.springframework.integration.ext.samples.cafe.Order;
 import org.springframework.integration.ext.samples.cafe.OrderItem;
 
 /**
@@ -30,7 +30,7 @@ import org.springframework.integration.ext.samples.cafe.OrderItem;
 public class OrderSplitter {
 
     @Splitter(inputChannel = "orders", outputChannel = "drinks")
-    public List<OrderItem> split(DrinkOrder order) {
+    public List<OrderItem> split(Order order) {
 	return order.getItems();
     }
 

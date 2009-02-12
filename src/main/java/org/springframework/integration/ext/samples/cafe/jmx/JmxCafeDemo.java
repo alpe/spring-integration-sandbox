@@ -20,7 +20,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.integration.ext.samples.cafe.Cafe;
-import org.springframework.integration.ext.samples.cafe.DrinkOrder;
+import org.springframework.integration.ext.samples.cafe.Order;
 import org.springframework.integration.ext.samples.cafe.DrinkType;
 
 /**
@@ -45,7 +45,7 @@ public class JmxCafeDemo {
 	}
 	Cafe cafe = (Cafe) context.getBean("cafe");
 	for (int i = 1; i <= 100; i++) {
-	    DrinkOrder order = new DrinkOrder(i);
+	    Order order = new Order(i);
 	    // order.addItem(DrinkType.LATTE, 2, false);
 	    order.addItem(DrinkType.CAPPUCCINO, 2, false);
 	    order.addItem(DrinkType.ESPRESSO, 2, false);

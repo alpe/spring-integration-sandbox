@@ -21,7 +21,7 @@ import org.springframework.integration.annotation.Gateway;
 /**
  * The entry point for Cafe Demo. The demo's main() method invokes the '
  * <code>placeOrder</code>' method on a generated MessagingGateway proxy. The
- * gateway then passes the {@link DrinkOrder} as the payload of a
+ * gateway then passes the {@link Order} as the payload of a
  * {@link org.springframework.integration.core.Message} to the configured
  * <em>requestChannel</em>. The channel ('orders') is defined in the
  * 'cafeDemo.xml' file.
@@ -31,6 +31,6 @@ import org.springframework.integration.annotation.Gateway;
 public interface Cafe {
 
     @Gateway(requestChannel = "orders")
-    void placeOrder(DrinkOrder order);
+    void placeOrder(Order order);
 
 }
