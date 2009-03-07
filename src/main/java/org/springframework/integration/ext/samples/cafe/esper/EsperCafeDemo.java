@@ -20,8 +20,8 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.integration.ext.samples.cafe.Cafe;
-import org.springframework.integration.ext.samples.cafe.Order;
 import org.springframework.integration.ext.samples.cafe.DrinkType;
+import org.springframework.integration.ext.samples.cafe.Order;
 
 /**
  * Provides the 'main' method for running the Cafe Demo application. When an
@@ -40,7 +40,7 @@ public class EsperCafeDemo {
 	if (args.length > 0) {
 	    context = new FileSystemXmlApplicationContext(args);
 	} else {
-	    context = new ClassPathXmlApplicationContext("esper-cafeDemo.xml",
+	    context = new ClassPathXmlApplicationContext(new String[] {"esper-cafeDemo.xml", "../cafeDemo.xml"},
 		    EsperCafeDemo.class);
 	}
 	Cafe cafe = (Cafe) context.getBean("cafe");

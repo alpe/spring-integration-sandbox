@@ -15,38 +15,6 @@
 			
 	<annotation-config/>
 	<context:component-scan base-package="org.springframework.integration.ext.samples.cafe.annotation"/>
-	<context:component-scan base-package="org.springframework.integration.ext.samples.cafe.jmx"/>
-	
-	<!-- 
-	| JMX configs
-	 -->
-	<beans:bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
-	<beans:property name="locateExistingServerIfPossible" value="true"/>
-	</beans:bean>
-
-    <beans:bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
-        <beans:property name="assembler" ref="assembler"/>
-        <beans:property name="namingStrategy" ref="namingStrategy"/>
-        <beans:property name="autodetect" value="true"/>
-    </beans:bean>
-
-    <beans:bean id="jmxAttributeSource"
-          class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource"/>
-
-    <!-- will create management interface using annotation metadata -->
-    <beans:bean id="assembler"
-          class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
-        <beans:property name="attributeSource" ref="jmxAttributeSource"/>
-    </beans:bean>
-
-    <!-- will pick up the ObjectName from the annotation -->
-    <beans:bean id="namingStrategy"
-          class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
-        <beans:property name="attributeSource" ref="jmxAttributeSource"/>
-    </beans:bean>
-     
-    <beans:bean class="org.springframework.integration.ext.samples.cafe.jmx.JmxToAllBeansPostprocessor" />
-	
  	
 	<gateway id="cafe" service-interface="org.springframework.integration.ext.samples.cafe.Cafe"/>
 
