@@ -12,21 +12,16 @@ import org.springframework.integration.annotation.Transformer;
 @MessageEndpoint
 public class DurationToStringTransformer {
 
-    /**
-     * Transform message.
-     * 
-     * @param orderNumber
-     *            order number
-     * @param duration
-     *            duration in ms
-     * @return string representation
-     */
-    @Transformer(inputChannel = "esperOrderDuration", outputChannel = "esperOut")
-    public String transform(@Header("orderNumber") int orderNumber,
-	    long duration) {
-	return String
-		.format(
-			"[ESPER]Transformed: order number %s had a duration of %s ms.\n",
-			orderNumber, duration);
-    }
+	/**
+	 * Transform message.
+	 * 
+	 * @param orderNumber order number
+	 * @param duration duration in ms
+	 * @return string representation
+	 */
+	@Transformer(inputChannel = "esperOrderDuration", outputChannel = "esperOut")
+	public String transform(@Header("orderNumber") int orderNumber, long duration) {
+		return String.format("[ESPER]Transformed: order number %s had a duration of %s ms.\n",
+				orderNumber, duration);
+	}
 }

@@ -11,13 +11,11 @@ import org.springframework.integration.annotation.Header;
  */
 public interface EsperOrderDurationGateway {
 
-    /**
-     * 
-     * @param orderNumber
-     *            order number
-     * @param duration
-     *            endTime-startTime of order
-     */
-    @Gateway(requestChannel = "esperOrderDuration")
-    public void update(@Header("orderNumber") int orderNumber, long duration);
+	/**
+	 * 
+	 * @param orderNumber order number
+	 * @param duration endTime-startTime of order
+	 */
+	@Gateway(requestChannel = "esperOrderDuration")
+	public void update(@Header("orderNumber") int orderNumber, long duration);
 }

@@ -14,9 +14,9 @@
 			http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd">
 			
 	<annotation-config/>
-	<context:component-scan base-package="org.springframework.integration.ext.samples.cafe.annotation"/>
+	<context:component-scan base-package="org.springframework.integration.samples.cafe.annotation"/>
  	
-	<gateway id="cafe" service-interface="org.springframework.integration.ext.samples.cafe.Cafe"/>
+	<gateway id="cafe" service-interface="org.springframework.integration.samples.cafe.Cafe"/>
 
 	<channel id="orders"/>
 	<channel id="drinks"/>
@@ -25,7 +25,6 @@
 	<channel id="coldDrinkBarista"/>
 	<channel id="hotDrinkBarista"/>
     <channel id="preparedDrinks"/>
-    <channel id="deliveries"/>
 
 	<bridge input-channel="coldDrinks" output-channel="coldDrinkBarista">
 		<poller>

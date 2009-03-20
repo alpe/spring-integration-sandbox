@@ -19,9 +19,9 @@ package org.springframework.integration.ext.samples.cafe.jmx;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.integration.ext.samples.cafe.Cafe;
-import org.springframework.integration.ext.samples.cafe.DrinkType;
-import org.springframework.integration.ext.samples.cafe.Order;
+import org.springframework.integration.samples.cafe.Cafe;
+import org.springframework.integration.samples.cafe.DrinkType;
+import org.springframework.integration.samples.cafe.Order;
 
 /**
  * Provides the 'main' method for running the Cafe Demo application. When an
@@ -30,28 +30,32 @@ import org.springframework.integration.ext.samples.cafe.Order;
  * relevant components are configured with annotations (such as the
  * OrderSplitter, DrinkRouter, and Barista classes).
  * 
+ * copy/paste from spring cafe demo with minor modifications. original authors:
  * @author Mark Fisher
  * @author Marius Bogoevici
+ * @author ap
+ * 
  */
 public class JmxCafeDemo {
 
-    public static void main(String[] args) {
-	AbstractApplicationContext context = null;
-	if (args.length > 0) {
-	    context = new FileSystemXmlApplicationContext(args);
-	} else {
-	    context = new ClassPathXmlApplicationContext(new String[] {
-		    "jmxContext.xml", "../cafeDemo.xml" }, JmxCafeDemo.class);
+	public static void main(String[] args) {
+		AbstractApplicationContext context = null;
+		if (args.length > 0) {
+			context = new FileSystemXmlApplicationContext(args);
+		}
+		else {
+			context = new ClassPathXmlApplicationContext(new String[] { "jmxContext.xml",
+					"../cafeDemo.xml" }, JmxCafeDemo.class);
+		}
+		Cafe cafe = (Cafe) context.getBean("cafe");
+		for (int i = 1; i <= 100; i++) {
+			Order order = new Order(i);
+			// order.addItem(DrinkType.LATTE, 2, false);
+			order.addItem(DrinkType.CAPPUCCINO, 2, false);
+			order.addItem(DrinkType.ESPRESSO, 2, false);
+			order.addItem(DrinkType.MOCHA, 3, true);
+			cafe.placeOrder(order);
+		}
 	}
-	Cafe cafe = (Cafe) context.getBean("cafe");
-	for (int i = 1; i <= 100; i++) {
-	    Order order = new Order(i);
-	    // order.addItem(DrinkType.LATTE, 2, false);
-	    order.addItem(DrinkType.CAPPUCCINO, 2, false);
-	    order.addItem(DrinkType.ESPRESSO, 2, false);
-	    order.addItem(DrinkType.MOCHA, 3, true);
-	    cafe.placeOrder(order);
-	}
-    }
 
 }
