@@ -3,6 +3,11 @@
 	<settings defaultResolver="default" />
 		
 	<resolvers>
+		<url name="spring-integration">
+			<ivy pattern="http://repository.springsource.com/ivy/bundles/integration/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			<artifact pattern="http://repository.springsource.com/ivy/bundles/integration/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>
+	
 		<url name="spring-release">
 			<ivy pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			<artifact pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
@@ -28,6 +33,7 @@
 			<resolver ref="codehaus" />
 			<resolver ref="public" />
 			<resolver ref="spring-milestone" />
+			<resolver ref="spring-integration" />
 		</chain>
 		<chain name="default" returnFirst="true">
 			<resolver ref="main" />
