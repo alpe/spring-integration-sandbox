@@ -1,4 +1,4 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="hello-ivy" default="retrieve">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="spring-integration-sandbox" default="retrieve">
 
     
     <!-- ================================= 
