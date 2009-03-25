@@ -11,7 +11,8 @@ https://src.springframework.org/svn/spring-integration/trunk/org.springframework
 Esper:
 http://esper.codehaus.org/
 
-
+OnlineMQ:
+http://onlinemq.com/ 
 
 Esper integration
 -----------------
@@ -34,6 +35,9 @@ Add monitoring and configuration support via jmx to SI components.
 * Jmx setup
 
 
-
+OnlineMQ
+---------
+Sample integration with onlinemq-1.07.jar
+* see http://onlinemq.com/ 
 
 
