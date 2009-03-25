@@ -14,7 +14,7 @@ public class OnlineMQOutboundGateway extends AbstractReplyProducingMessageHandle
 
 	private static final Logger log = Logger.getLogger(OnlineMQOutboundGateway.class);
 
-	private String queueName = "sampleQueue1";
+	private String queueName;
 
 	private OnlineMQTemplate onlineMQTemplate;
 
@@ -61,7 +61,6 @@ public class OnlineMQOutboundGateway extends AbstractReplyProducingMessageHandle
 			throw new MessageHandlingException(requestMessage, "Authentication failed");
 		}
 		log.debug("finished message sending");
-		// replyMessageHolder.add("Result-code: " + returnCode);
 	}
 
 }

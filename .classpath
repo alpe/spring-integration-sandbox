@@ -3,7 +3,9 @@
 	<classpathentry kind="src" path="src/test"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="config"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/ivy.xml/*"/>
+	<classpathentry kind="lib" path="unresolved-lib/onlinemq-1.07.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

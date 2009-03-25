@@ -3,21 +3,23 @@ package org.springframework.integration.ext.samples.cafe.onlinemq;
 import omq.api.OMQMessage;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.GenericMessage;
 import org.springframework.integration.message.MessageSource;
+import org.springframework.util.Assert;
 
 /**
  * @author Alex Peters
  * 
  */
-public class OnlineMQInboundGateway implements MessageSource<Object> {
+public class OnlineMQInboundGateway implements MessageSource<Object>, InitializingBean {
 
 	private static final Logger log = Logger.getLogger(OnlineMQInboundGateway.class);
 
 	private OnlineMQTemplate onlineMQTemplate;
 
-	private String queueName = "sampleQueue1";
+	private String queueName;
 
 	boolean extractPayload = true;
 
@@ -34,6 +36,15 @@ public class OnlineMQInboundGateway implements MessageSource<Object> {
 
 	public void setExtractPayload(boolean extractPayload) {
 		this.extractPayload = extractPayload;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(onlineMQTemplate);
+		Assert.hasText(queueName);
 	}
 
 	/**

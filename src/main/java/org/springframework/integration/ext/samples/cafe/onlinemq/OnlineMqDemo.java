@@ -1,5 +1,7 @@
 package org.springframework.integration.ext.samples.cafe.onlinemq;
 
+import java.util.Date;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.channel.BeanFactoryChannelResolver;
 import org.springframework.integration.channel.ChannelResolver;
@@ -16,19 +18,15 @@ public class OnlineMqDemo {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
 				"onlinemqDemo.xml", OnlineMqDemo.class);
 		ChannelResolver channelResolver = new BeanFactoryChannelResolver(context);
-		
-		String requestXml = "irgend ein message text";
-
-		// Create the Message object
-		Message<String> message = MessageBuilder.withPayload(requestXml).build();
-
-		// Send the Message to the handler's input channel
 		MessageChannel channel = channelResolver.resolveChannelName("sampleQueue1");
-		channel.send(message);
-		OnlineMQInboundGateway inGateway = (OnlineMQInboundGateway) context
-				.getBean("inboundGateway");
-		// wait
-		Thread.sleep(60*1000L);
+		// send some sample messages
+		for (int i =0; i<10; i++) {
+			String requestMsg = "any message text: '"+new Date()+"'...";
+			Message<String> message = MessageBuilder.withPayload(requestMsg).build();
+			channel.send(message);
+			// wait
+			Thread.sleep(1*1000L);
+		}
 		System.exit(0);
 	}
 

@@ -4,7 +4,7 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:stream="http://www.springframework.org/schema/integration/stream"
 	xmlns:ws="http://www.springframework.org/schema/integration/ws"
-	xmlns:http="http://www.springframework.org/schema/integration/http"
+	xmlns:onlinemq="http://www.springframework.org/schema/integration/ext/onlinemq"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 			http://www.springframework.org/schema/context
@@ -13,28 +13,16 @@
 			http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
 			http://www.springframework.org/schema/integration/stream
 			http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd
-			http://www.springframework.org/schema/integration/http
-			http://www.springframework.org/schema/integration/http/spring-integration-http-1.0.xsd
+			http://www.springframework.org/schema/integration/ext/onlinemq
+			http://www.springframework.org/schema/integration/ext/onlinemq/spring-integration-onlinemq-1.0.xsd
 			http://www.springframework.org/schema/integration/ws
 			http://www.springframework.org/schema/integration/ws/spring-integration-ws-1.0.xsd">
 
-
 	<annotation-config />
-	
 	<context:property-placeholder location="classpath:org/springframework/integration/ext/samples/cafe/onlinemq/onlinemq.properties"/>
 
 	<channel id="sampleQueue1"/> 
-
-    <poller id="inPoller" max-messages-per-poll="3">
-         <interval-trigger interval="3" time-unit="SECONDS"/>
-     </poller>
-
-
-	<beans:bean id="pollingFactory" class="org.springframework.integration.config.SourcePollingChannelAdapterFactoryBean" >
-		<beans:property name="source" ref="inboundGateway" />
-		<beans:property name="outputChannel" ref="deliveries" />
-		<beans:property name="pollerMetadata" ref="inPoller" />
-	</beans:bean>
+	<stream:stdout-channel-adapter id="deliveries" append-newline="true"/>
 
 	<beans:bean id="onlineMQTemplate" class="org.springframework.integration.ext.samples.cafe.onlinemq.OnlineMQTemplate" >
 		<beans:property name="userLogin" value="${omq.userLogin}"/>
@@ -42,20 +30,21 @@
 		<beans:property name="queueManager" value="${omq.queueManager}"/>
 		<beans:property name="transacted" value="${omq.transacted}"/>
 	</beans:bean>
+	
+	<onlinemq:inbound-channel-adapter id="inboundGateway" 
+		template="onlineMQTemplate"
+		queueName="sampleQueue1" 
+		channel="deliveries" >
+	    <poller  max-messages-per-poll="3">
+        	<interval-trigger interval="3" time-unit="SECONDS"/>
+     	</poller>
+	</onlinemq:inbound-channel-adapter>
 
-	<beans:bean id="inboundGateway" class="org.springframework.integration.ext.samples.cafe.onlinemq.OnlineMQInboundGateway" >
-		<beans:property name="template" ref="onlineMQTemplate" />
-    </beans:bean>
-
-	<beans:bean id="outboundGateway" class="org.springframework.integration.ext.samples.cafe.onlinemq.OnlineMQOutboundGateway">
-		<beans:property name="template" ref="onlineMQTemplate" />
-    </beans:bean>
-
-	<chain input-channel="sampleQueue1" >
-     	<service-activator ref="outboundGateway" method="handleMessage" />
- 	</chain>
-
-	<stream:stdout-channel-adapter id="deliveries" append-newline="true"/>
-
+	<onlinemq:outbound-gateway id="outboundGateway" 		
+		template="onlineMQTemplate"
+		queueName="sampleQueue1"
+		request-channel="sampleQueue1"
+		/>
+	
 
 </beans:beans>
