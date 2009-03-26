@@ -5,6 +5,7 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.handler.AbstractReplyProducingMessageHandler;
 import org.springframework.integration.handler.ReplyMessageHolder;
 import org.springframework.integration.message.MessageHandlingException;
+import org.springframework.util.Assert;
 
 /**
  * @author Alex Peters
@@ -27,10 +28,16 @@ public class OnlineMQOutboundGateway extends AbstractReplyProducingMessageHandle
 		this.onlineMQTemplate = onlineMQTemplate;
 	}
 
+	/**
+	 * @param queueName name of queue at onlineMQ
+	 */
 	public void setQueueName(String queueName) {
 		this.queueName = queueName;
 	}
 
+	/**
+	 * @param extractPayload
+	 */
 	public void setExtractPayload(boolean extractPayload) {
 		this.extractPayload = extractPayload;
 	}
@@ -41,26 +48,54 @@ public class OnlineMQOutboundGateway extends AbstractReplyProducingMessageHandle
 	@Override
 	protected void handleRequestMessage(Message<?> requestMessage,
 			ReplyMessageHolder replyMessageHolder) {
-		int returnCode;
+		Assert.notNull(requestMessage);
+		log.debug("Sending message :" + requestMessage.getHeaders().getId());
+		int returnCode = sendMessage(requestMessage);
+		if (returnCode != 0) {
+			throw new MessageHandlingException(requestMessage, getCodeDescription(returnCode));
+		}
+		log.debug("Message sent to O10nlineMQ");
+	}
+
+	/**
+	 * @see http
+	 * ://www.onlinemq.com/support/index.php/Online_MQ_API#Error_handling
+	 * @param returnCode code
+	 * @return description
+	 */
+	String getCodeDescription(int returnCode) {
+		switch (returnCode) {
+		case 101:
+			return "Authentication failed";
+		case 201:
+			return "Unknown queue";
+		case 202:
+			return "Unknown queue for specified queue manager";
+		case 203:
+			return "Unknown queue manager";
+		case 204:
+			return "User is not authorized as viewer for queue";
+		case 301:
+			return "Message could not be found";
+		case 401:
+			return "Must be SuperAdmin for this action";
+		default:
+			return "Failure with code: " + returnCode;
+		}
+	}
+
+	/**
+	 * @param requestMessage
+	 * @return return code.
+	 */
+	int sendMessage(Message<?> requestMessage) {
 		try {
 			Object payload = extractPayload ? requestMessage.getPayload() : requestMessage;
-			returnCode = onlineMQTemplate.send(queueName, payload);
+			return onlineMQTemplate.send(queueName, payload);
 		}
 		catch (Exception e) {
-			throw new MessageHandlingException(requestMessage, "failed to send OnlineMQ message", e);
+			throw new MessageHandlingException(requestMessage, "Failed to send OnlineMQ message", e);
 		}
-		if (returnCode == 0) {
-			log.debug("Message sent to OnlineMQ");
-		}
-		else if (returnCode == 101)
-		// example for handling specific error code 101 = Authentication failed
-		{
-			throw new MessageHandlingException(requestMessage, "Authentication failed");
-		}
-		else {
-			throw new MessageHandlingException(requestMessage, "Authentication failed");
-		}
-		log.debug("finished message sending");
 	}
 
 }

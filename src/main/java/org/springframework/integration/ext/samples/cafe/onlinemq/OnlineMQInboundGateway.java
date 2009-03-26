@@ -1,5 +1,7 @@
 package org.springframework.integration.ext.samples.cafe.onlinemq;
 
+import java.io.IOException;
+
 import omq.api.OMQMessage;
 
 import org.apache.log4j.Logger;
@@ -30,10 +32,16 @@ public class OnlineMQInboundGateway implements MessageSource<Object>, Initializi
 		this.onlineMQTemplate = onlineMQTemplate;
 	}
 
+	/**
+	 * @param queueName name of queue at onlineMQ
+	 */
 	public void setQueueName(String queueName) {
 		this.queueName = queueName;
 	}
 
+	/**
+	 * @param extractPayload
+	 */
 	public void setExtractPayload(boolean extractPayload) {
 		this.extractPayload = extractPayload;
 	}
@@ -61,11 +69,7 @@ public class OnlineMQInboundGateway implements MessageSource<Object>, Initializi
 			}
 			log.debug("Recieved message: " + message);
 			if (extractPayload) {
-				Object receivedObject = message.getMsgBodyAsObject();
-				if (receivedObject instanceof Message) {
-					return (Message<Object>) receivedObject;
-				}
-				return new GenericMessage<Object>(receivedObject);
+				return extractPayload(message);
 			}
 			return new GenericMessage<Object>(message);
 		}
@@ -73,6 +77,20 @@ public class OnlineMQInboundGateway implements MessageSource<Object>, Initializi
 			throw new IllegalStateException("Failed to retrieve Message.", e);
 		}
 
+	}
+
+	/**
+	 * @param message
+	 * @return
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	Message<Object> extractPayload(OMQMessage message) throws IOException, ClassNotFoundException {
+		Object receivedObject = message.getMsgBodyAsObject();
+		if (receivedObject instanceof Message) {
+			return (Message<Object>) receivedObject;
+		}
+		return new GenericMessage<Object>(receivedObject);
 	}
 
 }
