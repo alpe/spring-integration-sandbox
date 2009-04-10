@@ -3,7 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:stream="http://www.springframework.org/schema/integration/stream"
-	xmlns:ws="http://www.springframework.org/schema/integration/ws"
 	xmlns:onlinemq="http://www.springframework.org/schema/integration/ext/onlinemq"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
@@ -14,17 +13,15 @@
 			http://www.springframework.org/schema/integration/stream
 			http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd
 			http://www.springframework.org/schema/integration/ext/onlinemq
-			http://www.springframework.org/schema/integration/ext/onlinemq/spring-integration-onlinemq-1.0.xsd
-			http://www.springframework.org/schema/integration/ws
-			http://www.springframework.org/schema/integration/ws/spring-integration-ws-1.0.xsd">
+			http://www.springframework.org/schema/integration/ext/onlinemq/spring-integration-onlinemq-1.0.xsd">
 
 	<annotation-config />
-	<context:property-placeholder location="classpath:org/springframework/integration/ext/samples/cafe/onlinemq/onlinemq.properties"/>
+	<context:property-placeholder location="classpath:org/springframework/integration/ext/samples/onlinemq/onlinemq.properties"/>
 
 	<channel id="sampleQueue1"/> 
 	<stream:stdout-channel-adapter id="deliveries" append-newline="true"/>
 
-	<beans:bean id="onlineMQTemplate" class="org.springframework.integration.ext.samples.cafe.onlinemq.OnlineMQJavaAPITemplate" >
+	<beans:bean id="onlineMQTemplate" class="org.springframework.integration.ext.samples.onlinemq.OnlineMQJavaAPITemplate" >
 		<beans:property name="userLogin" value="${omq.userLogin}"/>
 		<beans:property name="password" value="${omq.password}"/>
 		<beans:property name="queueManager" value="${omq.queueManager}"/>

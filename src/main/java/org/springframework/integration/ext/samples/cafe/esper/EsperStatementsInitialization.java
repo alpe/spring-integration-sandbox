@@ -17,7 +17,7 @@ import com.espertech.esper.client.EPStatement;
 /**
  * Annotation based spring config.
  * 
- * @author ap
+ * @author Alex Peters
  * 
  */
 @Configuration

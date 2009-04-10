@@ -1,1 +1,0 @@
-http\://www.springframework.org/schema/integration/ext/onlinemq=org.springframework.integration.ext.samples.cafe.onlinemq.config.OnlineMQNamespaceHandler

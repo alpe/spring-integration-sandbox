@@ -6,7 +6,7 @@ import org.springframework.integration.annotation.Header;
 /**
  * Abstract gateway into spring integration.
  * 
- * @author ap
+ * @author Alex Peters
  * 
  */
 public interface EsperOrderDurationGateway {

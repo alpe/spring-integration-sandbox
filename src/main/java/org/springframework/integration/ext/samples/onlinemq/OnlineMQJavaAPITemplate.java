@@ -1,4 +1,4 @@
-package org.springframework.integration.ext.samples.cafe.onlinemq;
+package org.springframework.integration.ext.samples.onlinemq;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -124,7 +124,7 @@ public class OnlineMQJavaAPITemplate implements OnlineMQTemplate {
 	/**
 	 * {@inheritDoc}
 	 */
-	public OMQMessage recieve(final String queueName) throws OnlineMQException {
+	public OMQMessage receive(final String queueName) throws OnlineMQException {
 		Assert.hasText(queueName, "Queue must not be empty");
 		return execute(new SessionCallback<OMQMessage>() {
 			@Override
@@ -165,7 +165,6 @@ public class OnlineMQJavaAPITemplate implements OnlineMQTemplate {
 		Assert.notNull(action, "Callback object must not be null");
 		OMQConnection conToClose = null;
 		OMQSession sessionToClose = null;
-
 		try {
 			conToClose = openConnection();
 			sessionToClose = conToClose.createSession(inTransaction);

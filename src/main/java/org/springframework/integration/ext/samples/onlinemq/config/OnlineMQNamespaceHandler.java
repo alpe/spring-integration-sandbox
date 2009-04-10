@@ -1,4 +1,4 @@
-package org.springframework.integration.ext.samples.cafe.onlinemq.config;
+package org.springframework.integration.ext.samples.onlinemq.config;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 

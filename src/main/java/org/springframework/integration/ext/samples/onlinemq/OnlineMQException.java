@@ -1,10 +1,12 @@
-package org.springframework.integration.ext.samples.cafe.onlinemq;
+package org.springframework.integration.ext.samples.onlinemq;
 
 /**
  * @author Alex Peters
- *
+ * 
  */
 public class OnlineMQException extends Exception {
+
+	private static final long serialVersionUID = -2001636405427545455L;
 
 	/**
 	 * 

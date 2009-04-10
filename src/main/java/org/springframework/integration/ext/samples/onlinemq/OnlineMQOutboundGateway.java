@@ -1,4 +1,4 @@
-package org.springframework.integration.ext.samples.cafe.onlinemq;
+package org.springframework.integration.ext.samples.onlinemq;
 
 import org.apache.log4j.Logger;
 import org.springframework.integration.core.Message;

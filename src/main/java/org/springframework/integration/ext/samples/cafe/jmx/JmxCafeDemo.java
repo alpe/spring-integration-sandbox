@@ -31,9 +31,9 @@ import org.springframework.integration.samples.cafe.Order;
  * OrderSplitter, DrinkRouter, and Barista classes).
  * 
  * copy/paste from spring cafe demo with minor modifications. original authors:
- * @author Mark Fisher
- * @author Marius Bogoevici
- * @author ap
+ * @author Mark Fisher (original)
+ * @author Marius Bogoevici (original)
+ * @author Alex Peters (modifications)
  * 
  */
 public class JmxCafeDemo {

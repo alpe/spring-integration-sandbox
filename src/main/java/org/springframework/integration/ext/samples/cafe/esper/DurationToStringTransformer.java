@@ -7,7 +7,7 @@ import org.springframework.integration.annotation.Transformer;
 /**
  * Transforming Esper message to printable string.
  * 
- * @author ap
+ * @author Alex Peters
  */
 @MessageEndpoint
 public class DurationToStringTransformer {

@@ -1,4 +1,4 @@
-package org.springframework.integration.ext.samples.cafe.onlinemq;
+package org.springframework.integration.ext.samples.onlinemq;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class OnlineMQInboundGateway implements MessageSource<Object>, Initializi
 
 	private String queueName;
 
-	boolean extractPayload = true;
+	private boolean extractPayload = true;
 
 	/**
 	 * @param onlineMQTemplate the onlineMQTemplate to set
@@ -58,12 +58,11 @@ public class OnlineMQInboundGateway implements MessageSource<Object>, Initializi
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	public Message<Object> receive() {
 		log.debug("Recieve called");
 		try {
 			OMQMessage message;
-			message = onlineMQTemplate.recieve(queueName);
+			message = onlineMQTemplate.receive(queueName);
 			if (message == null) {
 				return null;
 			}
@@ -85,6 +84,7 @@ public class OnlineMQInboundGateway implements MessageSource<Object>, Initializi
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
+	@SuppressWarnings("unchecked")
 	Message<Object> extractPayload(OMQMessage message) throws IOException, ClassNotFoundException {
 		Object receivedObject = message.getMsgBodyAsObject();
 		if (receivedObject instanceof Message) {

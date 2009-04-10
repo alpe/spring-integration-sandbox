@@ -9,7 +9,7 @@ import org.springframework.integration.samples.cafe.OrderItem;
 /**
  * see link {@link Order}
  * 
- * @author ap
+ * @author Alex Peters
  */
 public class DrinkOrder extends org.springframework.integration.samples.cafe.Order {
 
@@ -50,7 +50,5 @@ public class DrinkOrder extends org.springframework.integration.samples.cafe.Ord
 		// TODO Auto-generated method stub
 		return super.getNumber();
 	}
-	
-	
 
 }

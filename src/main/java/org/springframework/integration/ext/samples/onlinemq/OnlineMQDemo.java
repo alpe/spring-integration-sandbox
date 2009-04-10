@@ -1,4 +1,4 @@
-package org.springframework.integration.ext.samples.cafe.onlinemq;
+package org.springframework.integration.ext.samples.onlinemq;
 
 import java.util.Date;
 
@@ -12,11 +12,11 @@ import org.springframework.integration.message.MessageBuilder;
 /**
  * @author Alex Peters
  */
-public class OnlineMqDemo {
+public class OnlineMQDemo {
 
 	public static void main(String[] args) throws InterruptedException {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
-				"onlinemqDemo.xml", OnlineMqDemo.class);
+				"onlinemqDemo.xml", OnlineMQDemo.class);
 		ChannelResolver channelResolver = new BeanFactoryChannelResolver(context);
 		MessageChannel channel = channelResolver.resolveChannelName("sampleQueue1");
 		// send some sample messages

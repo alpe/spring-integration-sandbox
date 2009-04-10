@@ -18,7 +18,7 @@ import org.springframework.util.Assert;
 
 /**
  * 
- * @author ap
+ * @author Alex Peters
  * 
  */
 public class JmxToAllBeansPostprocessor implements BeanPostProcessor, InitializingBean {

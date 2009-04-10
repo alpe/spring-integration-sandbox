@@ -1,6 +1,4 @@
-package org.springframework.integration.ext.samples.cafe.onlinemq;
-
-import java.io.IOException;
+package org.springframework.integration.ext.samples.onlinemq;
 
 import omq.api.OMQMessage;
 
@@ -15,22 +13,22 @@ public interface OnlineMQTemplate {
 	/**
 	 * @param payload
 	 * @param queueName
-	 * @return
+	 * @return result code
 	 * @throws OnlineMQException
 	 */
 	public abstract int send(final String queueName, Object payload) throws OnlineMQException;
 
 	/**
 	 * @param queueName
-	 * @return
+	 * @return {@link OMQMessage}
 	 * @throws OnlineMQException
 	 */
-	public abstract OMQMessage recieve(final String queueName) throws OnlineMQException;
+	public abstract OMQMessage receive(final String queueName) throws OnlineMQException;
 
 	/**
 	 * @param queueName
 	 * @param payload
-	 * @return
+	 * @return result code
 	 * @throws OnlineMQException
 	 */
 	public int send(final String queueName, byte[] payload) throws OnlineMQException;

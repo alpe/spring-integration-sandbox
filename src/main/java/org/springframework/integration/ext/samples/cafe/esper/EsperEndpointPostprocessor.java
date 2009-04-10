@@ -21,7 +21,7 @@ import com.espertech.esper.client.EPServiceProviderManager;
 /**
  * Spring Postprocessor to add Esper publishing method interceptor to channels.
  * 
- * @author ap
+ * @author Alex Peters
  * 
  */
 public class EsperEndpointPostprocessor implements BeanPostProcessor {
