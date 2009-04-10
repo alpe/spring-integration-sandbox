@@ -1,7 +1,7 @@
 Sandbox
 +++++++
  
-with modified Spring-Integration (SI) cafe sample.
+with a modified Spring-Integration (SI) cafe sample.
 Please see: 
 http://www.springsource.org/spring-integration
 
@@ -14,13 +14,16 @@ http://esper.codehaus.org/
 OnlineMQ:
 http://onlinemq.com/ 
 
+Amaton Simple Queue Service (SQS)
+http://aws.amazon.com/sqs/
+
 Esper integration
 -----------------
 Quote order durations via Ester framework. 
  
 * Postprocesser to add channel interceptors that send message payloads to Ester
-* added timestamps to order and delivery
-* spring annotation based java config 
+* Added timestamp to order
+* Spring annotation based java config 
 * Ester EPL Statement to fetch timestamps 
 * Subscriber on EPT statement that submits result to spring integration
   
@@ -28,16 +31,35 @@ Quote order durations via Ester framework.
 
 Jmx integration
 ---------------
-Add monitoring and configuration support via jmx to SI components.
+Add monitoring and configuration support via JMX to SI components.
  
-* Simple Postprocessor to create and register MBeans to all SI beans
-* added jmx annotations on Barista
+* Simple Postprocessor to create and register MBeans to all SI Beans
+* Added JMX annotations to Barista
 * Jmx setup
 
 
 OnlineMQ
 ---------
 Sample integration with onlinemq-1.07.jar
-* see http://onlinemq.com/ 
+
+* Push and receive SI messages
+* Configuration with Spring namespace handler
+
+To run the demo please customize your credentials in onlinemq.properties.
+The demo is using a pre created queue called "sampleQueue1" you may modify this 
+in onlinemqDemo.xml. 
+
+Amazon SQS
+----------
+
+* SOAP Client
+* SecurityHandler
+* Transactional message receive
+
+Run ant generate.sqs to build java classes from wsdl. 
+Edit your credentials in sqs.properties
+Using a pre created queue "sqsQueue1".
+ 
+
 
 
