@@ -1,10 +1,131 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="spring-integration-sandbox" default="retrieve">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="spring-integration-sandbox" default="test">
 
-    
-    <!-- ================================= 
-          target: resolve              
+	<property file="${basedir}/build.properties" />
+
+
+	<!-- ================================= 
+          Initialize              
          ================================= -->
-    <target name="retrieve" description="--> retrieve dependencies with ivy">
-        <ivy:retrieve />
-    </target>
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${java.classes.dir}" />
+		<mkdir dir="${test.classes.dir}" />
+		<mkdir dir="${junit.reports.dir}" />
+	</target>
+	
+	<path id="unresolved.classpath">
+      <fileset dir="${unresolved.lib.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+	</path>
+
+	<!-- ================================= 
+          Ivy resolve              
+         ================================= -->
+	<target name="ivy.init">
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant">
+			<classpath>
+				<path location="${unresolved.lib.dir}/ivy.jar" />
+			</classpath>
+		</taskdef>
+		<ivy:settings file="${ivy.settings.file}" />
+	</target>
+
+	<target name="resolve.test" depends="ivy.init" description="Resolve dependencies with ivy">
+		<ivy:cachepath resolveId="test.classpath" pathid="test.classpath" conf="test" type="jar" log="download-only" />
+	</target>
+	
+	<target name="resolve.compile" depends="ivy.init" description="Resolve dependencies with ivy">
+		<ivy:cachepath resolveId="compile.classpath" pathid="compile.classpath" conf="runtime" type="jar" log="download-only" />	
+	</target>
+
+
+	<!-- ================================= 
+          Compile               
+         ================================= -->
+	<target name="compile" depends="init, resolve.compile, generate.sqs">
+		<javac destdir="${java.classes.dir}" debug="on" target="1.6">
+			<src path="${java.src.dir}" />
+			<classpath >
+				<path refid="compile.classpath" />
+				<path refid="unresolved.classpath" />
+				<pathelement location="${build.junk.dir}" />
+			</classpath>			 
+		</javac>
+	</target>
+
+	<target name="test.compile" depends="init, compile, resolve.test">
+		<javac destdir="${test.classes.dir}" debug="on" target="1.6">
+			<src path="${test.src.dir}" />
+			<classpath >
+				<pathelement location="${java.classes.dir}" />
+				<path refid="compile.classpath" />
+				<path refid="test.classpath" />
+				<path refid="unresolved.classpath" />
+				<pathelement location="${build.junk.dir}" />
+			</classpath>			 
+		</javac>
+	</target>
+
+	<!-- ================================= 
+          Clean              
+         ================================= -->
+	<target name="clean" description="Delete build dir">
+		<delete dir="${build.dir}" />
+	</target>
+	<!-- ================================= 
+          Run all unit tests              
+         ================================= -->
+	<target name="test" depends="compile, test.compile" description="Run all junit tests. ">
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath >
+				<pathelement location="${java.classes.dir}" />
+				<pathelement location="${test.classes.dir}" />
+				<pathelement location="${test.src.dir}" />
+				<path refid="compile.classpath" />
+				<path refid="test.classpath" />
+				<path refid="unresolved.classpath" />
+				<pathelement location="${build.junk.dir}" />
+			</classpath>
+
+			<formatter type="plain" />
+
+			<batchtest fork="yes" todir="${junit.reports.dir}">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*Tests*.java" />
+					<exclude name="**/AllTests.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- ================================= 
+          Generate java from wsdl              
+         ================================= -->
+	<target name="generate.sqs" depends="init, resolve.test" description="Generate amazon sqs client api.">
+		<delete dir="${amazon.sqs.generate.src.dir}" />
+        <mkdir dir="${build.junk.dir}"/>
+		<mkdir dir="${amazon.sqs.generate.src.dir}"/>
+        	<exec executable="${wsimport.exec}">
+        		<env key="VMARGS" value="-Xmx256m" />
+        		<arg value="-quiet" />
+        		<arg value="-keep" />
+        		<arg line="-d ${build.junk.dir}" />
+        		<arg line="-s ${amazon.sqs.generate.src.dir}" />
+        		<arg value="${amazon.sqs.wsdl}"/>
+        	</exec>
+		<!--        	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+        		<classpath>
+        			<path refid="test.classpath" />
+        			<fileset dir="${unresolved.lib.dir}" includes="*.jar"/>
+        		</classpath>
+        	</taskdef>
+        	
+		<xjc destdir="${amazon.sqs2.generate.dir}" extension="true" removeOldOutput="yes" package="com.xerox.amazonws.typica.sqs2.jaxb">
+			<schema dir="${basedir}/wsdl" includes="QueueService.wsdl"/>
+			<produces dir="${amazon.sqs2.generate.dir}/com/xerox/amazonws/typica/sqs2/jaxb" includes="**/"/>
+		</xjc>
+-->		
+	</target>
+	
 </project>
