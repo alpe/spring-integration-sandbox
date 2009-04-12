@@ -30,6 +30,7 @@
 		<dependency org="org.springframework.integration" name="org.springframework.integration.xml" rev="1.0.2.RELEASE" conf="compile->compile"/>
 		<dependency org="org.springframework.integration" name="org.springframework.integration.stream" rev="1.0.2.RELEASE" conf="compile->compile"/>
 		<dependency org="org.springframework.integration" name="org.springframework.integration.samples" rev="1.0.2.RELEASE" conf="compile->compile"/>
+		<dependency org="org.springframework.integration" name="org.springframework.integration.http" rev="1.0.2.RELEASE" conf="compile->compile"/>
 <!--		<dependency org="org.springframework.integration" name="org.springframework.integration.http" rev="latest.integration" conf="compile->compile"/>
 -->
 		<dependency org="org.springframework.javaconfig" name="org.springframework.config.java" rev="1.0.0.M4" conf="compile->compile"/>
@@ -52,6 +53,12 @@
 		<!-- amazon sqs -->
 		<dependency org="javax.transaction" name="com.springsource.javax.transaction" rev="1.1.0" />
 		<!-- unresolved: atomikos-->
+		<!-- twitter-->
+		<dependency org="org.springframework.ws" name="org.springframework.oxm.java5" rev="1.5.5.A" conf="compile->runtime">
+			<exclude org="org.springframework"/>
+		</dependency>
+		
+		
 	</dependencies>
     
 </ivy-module>
