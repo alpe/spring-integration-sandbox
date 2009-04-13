@@ -16,7 +16,7 @@ public class StatusCommandHandler extends AbstractCommandHandler implements Init
 	private static final String COMMAND_PATTERN = createCommandRegExp("status");
 
 	@Autowired
-	private ControlBus identity;
+	private ControlBus controlBus;
 
 	public StatusCommandHandler() {
 		super(COMMAND_PATTERN);
@@ -27,7 +27,7 @@ public class StatusCommandHandler extends AbstractCommandHandler implements Init
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(identity);
+		Assert.notNull(controlBus);
 	}
 
 	/**
@@ -35,6 +35,6 @@ public class StatusCommandHandler extends AbstractCommandHandler implements Init
 	 */
 	@Override
 	public String handle(ControlCommand cmd) {
-		return "Up and Running since: " + identity.getStartDate().toString();
+		return "" + controlBus.getStatus() + " since " + controlBus.getLastStatusChangedDate();
 	}
 }

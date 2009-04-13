@@ -3,9 +3,15 @@ package org.springframework.integration.ext.samples.twitter.command;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.ext.samples.twitter.gateway.IncomingDirectMessage;
 import org.springframework.integration.ext.samples.twitter.gateway.OutgoingMessage;
+import org.springframework.integration.ext.samples.twitter.gateway.TwitterMessageRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Alex Peters
@@ -14,7 +20,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommandProcessManager {
 
+	private static final Logger log = Logger.getLogger(CommandProcessManager.class);
+
 	private final Set<CommandHandler<String>> cmdChain = new CopyOnWriteArraySet<CommandHandler<String>>();
+
+	@Autowired
+	private TwitterMessageRepository messageRepository;
 
 	public CommandProcessManager() {
 	}
@@ -24,11 +35,13 @@ public class CommandProcessManager {
 	}
 
 	@ServiceActivator(inputChannel = "unprocessedCommands", outputChannel = "commandResponses")
-	public OutgoingMessage handleCommand(ControlCommand cmd) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public OutgoingMessage handleCommand(IncomingDirectMessage cmd) {
 		if (isProcessed(cmd)) {
-			throw new IllegalStateException("Already processed Command with identity: "
-					+ cmd.getMessageId());
+			log.debug(String.format("Skipping message %s. Alredy processed!", cmd.getMessageId()));
+			return null;
 		}
+		messageRepository.store(cmd);
 		String responseText = proccessByChain(cmd);
 		if (responseText == null) {
 			return null;
@@ -51,9 +64,10 @@ public class CommandProcessManager {
 		return "Unsupported command: " + cmd.getText();
 	}
 
-	private boolean isProcessed(ControlCommand cmd) {
-		// TODO: check storage for messageid
-		return false;
+	private boolean isProcessed(IncomingDirectMessage cmd) {
+		IncomingDirectMessage msg = messageRepository.findIncomingMessage(cmd.getMessageId());
+		log.debug("Found message: " + msg);
+		return msg != null;
 	}
 
 }

@@ -3,10 +3,17 @@ package org.springframework.integration.ext.samples.twitter.gateway;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.springframework.core.style.ToStringCreator;
@@ -19,7 +26,17 @@ import org.springframework.integration.ext.samples.twitter.util.DateAdapter;
  */
 @XmlRootElement(name = "direct_message")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Table(name = "IncomingDirectMessage", uniqueConstraints = { @UniqueConstraint(columnNames = { "messageId", }) })
+@Entity
+@NamedQuery(name = IncomingDirectMessage.QUERY_FIND_BY_TWITTER_ID, query = "from IncomingDirectMessage where messageId = ?")
 public class IncomingDirectMessage implements ControlCommand, Serializable {
+
+	static final String QUERY_FIND_BY_TWITTER_ID = "incomingDirectMessage.byTwitterId";
+
+	@XmlTransient
+	@GeneratedValue
+	@Id
+	private long id;
 
 	/** unique twitter message id. natural key. */
 	@XmlElement(name = "id")
@@ -36,13 +53,15 @@ public class IncomingDirectMessage implements ControlCommand, Serializable {
 
 	@XmlElement(name = "created_at")
 	@XmlJavaTypeAdapter(DateAdapter.class)
-	private Date created;
+	private Date messageCreated;
 
 	@XmlElement(name = "recipient_screen_name")
 	private String recipientScreenName;
 
 	@XmlElement(name = "recipient_id")
 	private long recipientId;
+
+	Date dateCreated = new Date();
 
 	/** Empty package private constructor for Jaxb. */
 	IncomingDirectMessage() {
@@ -119,6 +138,6 @@ public class IncomingDirectMessage implements ControlCommand, Serializable {
 	public String toString() {
 		return new ToStringCreator(this).append("messageId", messageId).append("senderScreenName",
 				senderScreenName).append("text", text).append("recipientScreenName",
-				recipientScreenName).append("created", created).toString();
+				recipientScreenName).append("messageCreated", messageCreated).toString();
 	}
 }

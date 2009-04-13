@@ -17,7 +17,7 @@ public class TwitterDemo {
 		// MessageChannel channel =
 		// channelResolver.resolveChannelName("sqsQueue1");
 
-		Thread.sleep(20 * 1000L);
+		Thread.sleep(120 * 1000L);
 		System.exit(0);
 	}
 }

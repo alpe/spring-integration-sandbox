@@ -23,14 +23,15 @@
 
 	<annotation-config />
     <context:component-scan base-package="org.springframework.integration.ext.samples.twitter"/>
-    <context:property-placeholder location="classpath:org/springframework/integration/ext/samples/twitter/twitter.properties"/>
+    <context:property-placeholder location="classpath:org/springframework/integration/ext/samples/twitter/jdbc.properties, classpath:org/springframework/integration/ext/samples/twitter/twitter.properties" />
+    <beans:import resource="classpath:org/springframework/integration/ext/samples/twitter/databaseContext.xml"/>	
 
   	<channel id="incomingDirectMessages" datatype="org.w3c.dom.Document" />
   	<channel id="unprocessedCommands" />
   	<channel id="commandResponses" />
   	<channel id="outgoingDirectMessages" datatype="org.springframework.integration.ext.samples.twitter.gateway.OutgoingMessage" />
   	<publish-subscribe-channel id="dummy" />
- 	<stream:stdout-channel-adapter id="deliveries" append-newline="true"/>
+ 	<stream:stdout-channel-adapter id="sysout" append-newline="true"/>
   
 	<beans:bean id="twitterTemplate" class="org.springframework.integration.ext.samples.twitter.gateway.TwitterTemplate" >
 		<beans:constructor-arg  value="${twitter.userName}"/>
@@ -46,7 +47,7 @@
      	</poller>
 	</inbound-channel-adapter>
 	
-	<bridge output-channel="outgoingDirectMessages" input-channel="commandResponses"/>
+	<bridge output-channel="sysout" input-channel="commandResponses"/>
 	<outbound-channel-adapter id="outboundGateway" channel="outgoingDirectMessages" method="sendMessage" ref="directMessageOutChannelAdapter" />
 	
 
