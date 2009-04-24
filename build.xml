@@ -38,6 +38,11 @@
 	<target name="resolve.compile" depends="ivy.init" description="Resolve dependencies with ivy">
 		<ivy:cachepath resolveId="compile.classpath" pathid="compile.classpath" conf="runtime" type="jar" log="download-only" />	
 	</target>
+	
+	<target name="retrieve" depends="ivy.init" description="Copy all libs to lib dir" >
+	<mkdir dir="lib" />
+	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" />
+	</target>
 
 
 	<!-- ================================= 
