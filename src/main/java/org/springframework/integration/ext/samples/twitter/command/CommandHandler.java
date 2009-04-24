@@ -7,7 +7,7 @@ package org.springframework.integration.ext.samples.twitter.command;
  */
 public interface CommandHandler<T> {
 
-	public boolean canHandle(ControlCommand cmd);
+	boolean canHandle(ControlCommand cmd);
 
-	public T handle(ControlCommand cmd);
+	T handle(ControlCommand cmd);
 }

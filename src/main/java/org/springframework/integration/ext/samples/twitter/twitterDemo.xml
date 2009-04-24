@@ -27,7 +27,7 @@
     <beans:import resource="classpath:org/springframework/integration/ext/samples/twitter/databaseContext.xml"/>	
 
   	<channel id="incomingDirectMessages" datatype="org.w3c.dom.Document" />
-  	<channel id="unprocessedCommands" />
+  	<channel id="unprocessedCommands" datatype="org.springframework.integration.ext.samples.twitter.gateway.IncomingDirectMessage"/>
   	<channel id="commandResponses" />
   	<channel id="outgoingDirectMessages" datatype="org.springframework.integration.ext.samples.twitter.gateway.OutgoingMessage" />
   	<publish-subscribe-channel id="dummy" />
@@ -52,16 +52,17 @@
 	
 
 	 <chain input-channel="incomingDirectMessages" output-channel="unprocessedCommands">
-  		<filter ref="containsDirectMessageSelector" /> 	
+  		<filter ref="hasAnyDirectMessageSelector" /> 	
 		<si-xml:xpath-splitter id="messageSplitter" create-documents="true">
     		<si-xml:xpath-expression expression="/direct-messages/direct_message"/>
 		</si-xml:xpath-splitter>
 		<filter ref="containsCommandPatternSelector" />
  		<si-xml:unmarshalling-transformer id="incomingDirectMessageUnmarshaller"
     	unmarshaller="marshaller"/> 
+    	<filter ref="preventDublicateMessagesSelector" />
 	 </chain>
 	 
-	<si-xml:xpath-selector id="containsDirectMessageSelector" evaluation-result-type="boolean" >
+	<si-xml:xpath-selector id="hasAnyDirectMessageSelector" evaluation-result-type="boolean" >
    		<si-xml:xpath-expression expression="/direct-messages/direct_message"/>
 	</si-xml:xpath-selector>
 	

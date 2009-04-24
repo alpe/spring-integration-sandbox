@@ -2,8 +2,12 @@ package org.springframework.integration.ext.samples.twitter.command;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.handler.AbstractReplyProducingMessageHandler;
+import org.springframework.integration.handler.ReplyMessageHolder;
 import org.springframework.util.Assert;
 
 /**
@@ -11,7 +15,8 @@ import org.springframework.util.Assert;
  * 
  * @param <T>
  */
-public abstract class AbstractCommandHandler implements CommandHandler<String> {
+public abstract class AbstractCommandHandler extends AbstractReplyProducingMessageHandler implements
+		CommandHandler<String> {
 
 	private static final Logger log = Logger.getLogger(AbstractCommandHandler.class);
 
@@ -22,25 +27,19 @@ public abstract class AbstractCommandHandler implements CommandHandler<String> {
 	private boolean active = true;
 
 	/**
-	 * @param pattern regExp to identify command pattern in any text.
-	 */
-	public AbstractCommandHandler(String pattern) {
-		this(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-	}
-
-	/**
 	 * @param commandPattern
 	 */
 	public AbstractCommandHandler(Pattern commandPattern) {
 		super();
 		Assert.notNull(commandPattern);
 		this.commandPattern = commandPattern;
-
 	}
 
-	@Autowired
-	public boolean register(CommandProcessManager processManager) {
-		return processManager.addCommandHandler(this);
+	/**
+	 * @param pattern regExp to identify command pattern in any text.
+	 */
+	public AbstractCommandHandler(String pattern) {
+		this(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
 	}
 
 	/**
@@ -58,15 +57,41 @@ public abstract class AbstractCommandHandler implements CommandHandler<String> {
 	}
 
 	/**
+	 * @param processManager
+	 * @return
+	 */
+	@Autowired
+	public boolean register(TwitterCommandManager processManager) {
+		return processManager.addHandler(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void handleRequestMessage(Message<?> message, ReplyMessageHolder replyHolder) {
+		String resultPayload = null;
+		Object payload = message.getPayload();
+		if (payload != null && payload instanceof ControlCommand) {
+			ControlCommand incomingDM = (ControlCommand) payload;
+			if (canHandle(incomingDM)) {
+				resultPayload = handle(incomingDM);
+				replyHolder.set(resultPayload).build();
+			}
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean canHandle(ControlCommand cmd) {
-		if (cmd == null || cmd.getText() == null || cmd.getText().length() == 0) {
+		if (cmd == null || StringUtils.isBlank(cmd.getText())) {
 			return false;
 		}
 		if (!active) {
-			log.debug("Can not handle command. Handler " + getClass() + " is not active.");
+			log.debug("Handler " + getClass() + " is not active. Ignoring command.");
+			return false;
 		}
 
 		boolean result = commandPattern.matcher(cmd.getText()).matches();

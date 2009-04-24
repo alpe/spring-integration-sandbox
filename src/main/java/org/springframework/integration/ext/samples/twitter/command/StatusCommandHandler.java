@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 @Component
 public class StatusCommandHandler extends AbstractCommandHandler implements InitializingBean {
 
-	private static final String COMMAND_PATTERN = createCommandRegExp("status");
+	private static final String COMMAND_PATTERN = createCommandRegExp("astatus");
 
 	@Autowired
 	private ControlBus controlBus;
