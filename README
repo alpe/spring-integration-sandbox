@@ -17,6 +17,13 @@ http://onlinemq.com/
 Amazon Simple Queue Service (SQS)
 http://aws.amazon.com/sqs/
 
+Twitter
+http://apiwiki.twitter.com/
+
+Test Support
+http://www.springsource.org/spring-integration
+
+
 Esper integration
 -----------------
 Quote order durations via Ester framework. 
@@ -60,6 +67,21 @@ Run ant generate.sqs to build java classes from wsdl.
 Edit your credentials in sqs.properties
 Using a pre created queue "sqsQueue1".
  
+Twitter
+-------
 
+* Basic Process manager
+* Chain of responsibility for message handler
+* Twitter basic auth and rest access
+* Jaxb unmarshalling
+* Self registering componets
+* Bean factory
+* Selector Filter
+* Hibernate
 
+Polling twitter for any direct message and sending response to twitter or sysout.
 
+Test
+----
+* Hacrest and Mockito matcher
+* Factory and util methods
