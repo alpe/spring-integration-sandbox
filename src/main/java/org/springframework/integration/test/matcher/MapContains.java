@@ -14,10 +14,34 @@ import org.hamcrest.core.IsEqual;
 import org.junit.matchers.TypeSafeMatcher;
 
 /**
+ * <h2>Is the Map containing any or multiple entry that match?</h2> <br />
+ * <h3>Match a single entry by value or matcher. For example:</h3>
+ * 
+ * <pre>
+ * assertThat(map, hasEntry(ANY_KEY, is(ANY_VALUE)));
+ * assertThat(map, hasEntry(ANY_KEY, is(String.class)));
+ * assertThat(map, hasEntry(ANY_KEY, notNullValue()));
+ * </pre>
+ * 
+ * <h3>Match multiple entries in map:</h3>
+ * 
+ * <pre>
+ * Map&lt;String, Object&gt; expectedInHeaderMap = new HashMap&lt;String, Object&gt;();
+ * expectedInHeaderMap.put(ANY_KEY, ANY_VALUE);
+ * expectedInHeaderMap.put(OTHER_KEY, is(OTHER_VALUE));
+ * assertThat(map, hasAllEntries(expectedInHeaderMap));
+ * </pre>
+ * 
+ * <h3>Has single key:</h3>
+ * 
+ * <pre>
+ * assertThat(map, hasKey(ANY_KEY));
+ * </pre>
+ * 
  * @author Alex Peters
  * 
  */
-public class MapContains<T, V> extends TypeSafeMatcher<Map<T, V>> {
+public class MapContains<T, V> extends TypeSafeMatcher<Map<? super T, ? super V>> {
 
 	private final T key;
 
@@ -45,7 +69,7 @@ public class MapContains<T, V> extends TypeSafeMatcher<Map<T, V>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean matchesSafely(Map<T, V> item) {
+	public boolean matchesSafely(Map<? super T, ? super V> item) {
 		return item.containsKey(key) && valueMatcher.matches(item.get(key));
 	}
 
@@ -60,34 +84,35 @@ public class MapContains<T, V> extends TypeSafeMatcher<Map<T, V>> {
 	}
 
 	@Factory
-	public static <T, V> Matcher<Map<T, V>> hasEntry(T key, V value) {
+	public static <T, V> Matcher<Map<? super T, ? super V>> hasEntry(T key, V value) {
 		return new MapContains<T, V>(key, value);
 	}
 
 	@Factory
-	public static <T, V> Matcher<Map<T, V>> hasEntry(T key, Matcher<V> valueMatcher) {
+	public static <T, V> Matcher<Map<? super T, ? super V>> hasEntry(T key, Matcher<V> valueMatcher) {
 		return new MapContains<T, V>(key, valueMatcher);
 	}
 
 	@Factory
 	@SuppressWarnings("unchecked")
-	public static <T, V> Matcher<Map<T, V>> hasKey(T key) {
+	public static <T, V> Matcher<Map<? super T, ? super V>> hasKey(T key) {
 		return new MapContains<T, V>(key, (Matcher<V>) anything("any Value"));
 	}
 
 	@Factory
-	public static <T, V> Matcher<?> hasAllEntries(Map<T, V> entries) {
-		List<Matcher<?>> matchers = new ArrayList<Matcher<?>>(entries.size());
+	@SuppressWarnings("unchecked")
+	public static <T, V> Matcher<Map<? super T, ? super V>> hasAllEntries(Map<T, V> entries) {
+		List<Matcher<? extends Map<? super T, ? super V>>> matchers = new ArrayList<Matcher<? extends Map<? super T, ? super V>>>(
+				entries.size());
 		for (Map.Entry<T, V> entry : entries.entrySet()) {
 			final V value = entry.getValue();
 			if (value instanceof Matcher<?>) {
-				matchers.add(MapContains.hasEntry(entry.getKey(), (Matcher<?>) value));
+				matchers.add(hasEntry(entry.getKey(), (Matcher<V>) value));
 			}
 			else {
-				matchers.add(MapContains.hasEntry(entry.getKey(), value));
+				matchers.add(hasEntry(entry.getKey(), value));
 			}
 		}
 		return AllOf.allOf(matchers);
 	}
-
 }
