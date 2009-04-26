@@ -14,7 +14,7 @@ import org.springframework.integration.core.Message;
  * @author Alex Peters
  * 
  */
-public class MessageMatchers {
+public class MockitoMessageMatchers {
 
 	public static <T> Message<T> hasPayload(Matcher<T> payloadMatcher) {
 		return reportMatcher(PayloadMatcher.hasPayload(payloadMatcher)).<Message<T>> returnNull();
@@ -28,12 +28,16 @@ public class MessageMatchers {
 		return reportMatcher(HeaderMatcher.hasEntry(key, value)).<Message<T>> returnNull();
 	}
 
+	public static <T> Message<T> hasHeaderKey(String key) {
+		return reportMatcher(HeaderMatcher.hasKey(key)).<Message<T>> returnNull();
+	}
+
 	public static <T> Message<T> hasHeaderEntry(String key, Matcher<?> valueMatcher) {
 		return reportMatcher(HeaderMatcher.hasEntry(key, valueMatcher)).<Message<T>> returnNull();
 	}
 
-	public static <T> Message<T> hasHeaderEntries(Map<String, ?> entries) {
-		return reportMatcher(HeaderMatcher.hasEntries(entries)).<Message<T>> returnNull();
+	public static <T> Message<T> hasAllHeaderEntries(Map<String, ?> entries) {
+		return reportMatcher(HeaderMatcher.hasAllEntries(entries)).<Message<T>> returnNull();
 	}
 
 	// copy/paste from mockito.Matchers internal api.

@@ -10,7 +10,7 @@ import org.springframework.integration.core.Message;
 
 /**
  * @author Alex Peters
- *
+ * 
  */
 public class HeaderMatcher extends TypeSafeMatcher<Message<?>> {
 
@@ -37,7 +37,7 @@ public class HeaderMatcher extends TypeSafeMatcher<Message<?>> {
 	 */
 	@Override
 	public void describeTo(Description description) {
-		description.appendText("a message containing payload: ").appendDescriptionOf(matcher);
+		description.appendText("a message containing a header with: ").appendDescriptionOf(matcher);
 
 	}
 
@@ -52,8 +52,13 @@ public class HeaderMatcher extends TypeSafeMatcher<Message<?>> {
 	}
 
 	@Factory
-	public static Matcher<?> hasEntries(Map<String, ?> entries) {
-		return new HeaderMatcher(MapContains.hasEntries(entries));
+	public static Matcher<Message<?>> hasKey(String key) {
+		return new HeaderMatcher(MapContains.hasKey(key));
+	}
+
+	@Factory
+	public static Matcher<Message<?>> hasAllEntries(Map<String, ?> entries) {
+		return new HeaderMatcher(MapContains.hasAllEntries(entries));
 	}
 
 }

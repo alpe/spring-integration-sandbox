@@ -20,8 +20,16 @@ public class TestMessageHandlerFactory {
 	 * @param handler {@link MessageHandler}
 	 * @return handler
 	 */
-	public static ProducingHandlerStub stubAsProducingHandler(MessageHandler handler) {
-		return new ProducingHandlerStub(handler);
+	public static ProducingTestMessageHandler stubAsProducingHandler(MessageHandler handler) {
+		return new ProducingTestMessageHandler(handler);
+	}
+
+	/**
+	 * Create {@link MessageHandler} that counts all received messages.
+	 * @return handler
+	 */
+	public static CountingTestMessageHandler countingHandler() {
+		return new CountingTestMessageHandler(null);
 	}
 
 	/**
@@ -30,16 +38,16 @@ public class TestMessageHandlerFactory {
 	 * @param handler {@link MessageHandler}
 	 * @return handler
 	 */
-	public static CountingTestEndpoint stubAsCountingHandler(MessageHandler handler) {
-		return new CountingTestEndpoint(handler);
+	public static CountingTestMessageHandler stubAsCountingHandler(MessageHandler handler) {
+		return new CountingTestMessageHandler(handler);
 	}
 
 	/**
 	 * Create a {@link MessageHandler} that extracts the current thread name.
 	 * @return handler
 	 */
-	public static ThreadNameExtractingTestTarget threadNameExtractinHandler() {
-		return new ThreadNameExtractingTestTarget();
+	public static ThreadNameExtractingTestMessageHandler threadNameExtractingHandler() {
+		return new ThreadNameExtractingTestMessageHandler();
 	}
 
 	/**
@@ -48,24 +56,25 @@ public class TestMessageHandlerFactory {
 	 * @param latch {@link CountDownLatch}
 	 * @return handler
 	 */
-	public static ThreadNameExtractingTestTarget threadNameExtractinHandler(CountDownLatch latch) {
-		return new ThreadNameExtractingTestTarget(latch);
+	public static ThreadNameExtractingTestMessageHandler threadNameExtractinHandler(
+			CountDownLatch latch) {
+		return new ThreadNameExtractingTestMessageHandler(latch);
 	}
 
 	/**
 	 * Create a {@link MessageHandler} that rejects all messages.
 	 * @return handler
 	 */
-	public static RejectingMessageHandler rejectingHandler() {
-		return new RejectingMessageHandler();
+	public static RejectingTestMessageHandler rejectingHandler() {
+		return new RejectingTestMessageHandler();
 	}
 
-	public static class ProducingHandlerStub implements MessageHandler {
+	public static class ProducingTestMessageHandler implements MessageHandler {
 		private MessageChannel output;
 
 		private final MessageHandler handler;
 
-		public ProducingHandlerStub(MessageHandler handler) {
+		public ProducingTestMessageHandler(MessageHandler handler) {
 			this.handler = handler;
 		}
 
@@ -82,7 +91,7 @@ public class TestMessageHandlerFactory {
 		}
 	}
 
-	public static class ThreadNameExtractingTestTarget implements MessageHandler {
+	public static class ThreadNameExtractingTestMessageHandler implements MessageHandler {
 
 		private String threadName;
 
@@ -95,11 +104,11 @@ public class TestMessageHandlerFactory {
 			return threadName;
 		}
 
-		ThreadNameExtractingTestTarget() {
+		ThreadNameExtractingTestMessageHandler() {
 			this(null);
 		}
 
-		ThreadNameExtractingTestTarget(CountDownLatch latch) {
+		ThreadNameExtractingTestMessageHandler(CountDownLatch latch) {
 			this.latch = latch;
 		}
 
@@ -111,17 +120,17 @@ public class TestMessageHandlerFactory {
 		}
 	}
 
-	public static class CountingTestEndpoint implements MessageHandler {
+	public static class CountingTestMessageHandler implements MessageHandler {
 
 		private final AtomicInteger counter;
 
 		private final MessageHandler handler;
 
-		CountingTestEndpoint(MessageHandler handler) {
+		CountingTestMessageHandler(MessageHandler handler) {
 			this(new AtomicInteger(), handler);
 		}
 
-		CountingTestEndpoint(AtomicInteger counter, MessageHandler handler) {
+		CountingTestMessageHandler(AtomicInteger counter, MessageHandler handler) {
 			this.counter = counter;
 			this.handler = handler;
 		}
@@ -139,7 +148,7 @@ public class TestMessageHandlerFactory {
 		}
 	}
 
-	public static class RejectingMessageHandler implements MessageHandler {
+	public static class RejectingTestMessageHandler implements MessageHandler {
 
 		public void handleMessage(Message<?> message) {
 			throw new MessageRejectedException(message, "intentional test failure");

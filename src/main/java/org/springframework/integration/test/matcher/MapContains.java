@@ -1,5 +1,7 @@
 package org.springframework.integration.test.matcher;
 
+import static org.hamcrest.CoreMatchers.anything;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,10 +13,9 @@ import org.hamcrest.core.AllOf;
 import org.hamcrest.core.IsEqual;
 import org.junit.matchers.TypeSafeMatcher;
 
-
 /**
  * @author Alex Peters
- *
+ * 
  */
 public class MapContains<T, V> extends TypeSafeMatcher<Map<T, V>> {
 
@@ -45,7 +46,7 @@ public class MapContains<T, V> extends TypeSafeMatcher<Map<T, V>> {
 	 */
 	@Override
 	public boolean matchesSafely(Map<T, V> item) {
-		return valueMatcher.matches(item.get(key));
+		return item.containsKey(key) && valueMatcher.matches(item.get(key));
 	}
 
 	/**
@@ -54,7 +55,7 @@ public class MapContains<T, V> extends TypeSafeMatcher<Map<T, V>> {
 	@Override
 	public void describeTo(Description description) {
 		description.appendText("a Map entry with key ").appendValue(key).appendText(
-				"' and value matching").appendDescriptionOf(valueMatcher);
+				" and value matching ").appendDescriptionOf(valueMatcher);
 
 	}
 
@@ -69,7 +70,13 @@ public class MapContains<T, V> extends TypeSafeMatcher<Map<T, V>> {
 	}
 
 	@Factory
-	public static <T, V> Matcher<?> hasEntries(Map<T, V> entries) {
+	@SuppressWarnings("unchecked")
+	public static <T, V> Matcher<Map<T, V>> hasKey(T key) {
+		return new MapContains<T, V>(key, (Matcher<V>) anything("any Value"));
+	}
+
+	@Factory
+	public static <T, V> Matcher<?> hasAllEntries(Map<T, V> entries) {
 		List<Matcher<?>> matchers = new ArrayList<Matcher<?>>(entries.size());
 		for (Map.Entry<T, V> entry : entries.entrySet()) {
 			final V value = entry.getValue();

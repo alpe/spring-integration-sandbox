@@ -11,14 +11,14 @@ import org.springframework.integration.core.Message;
  * @author Alex Peters
  * 
  */
-public class PayloadMatcher<T> extends TypeSafeMatcher<Message<T>> {
+public class PayloadMatcher extends TypeSafeMatcher<Message<?>> {
 
-	private final Matcher<T> matcher;
+	private final Matcher<?> matcher;
 
 	/**
 	 * @param matcher
 	 */
-	PayloadMatcher(Matcher<T> matcher) {
+	PayloadMatcher(Matcher<?> matcher) {
 		super();
 		this.matcher = matcher;
 	}
@@ -27,7 +27,7 @@ public class PayloadMatcher<T> extends TypeSafeMatcher<Message<T>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean matchesSafely(Message<T> message) {
+	public boolean matchesSafely(Message<?> message) {
 		return matcher.matches(message.getPayload());
 	}
 
@@ -41,12 +41,12 @@ public class PayloadMatcher<T> extends TypeSafeMatcher<Message<T>> {
 	}
 
 	@Factory
-	public static <T> Matcher<Message<T>> hasPayload(T payload) {
-		return new PayloadMatcher<T>(IsEqual.equalTo(payload));
+	public static <T> Matcher<Message<?>> hasPayload(T payload) {
+		return new PayloadMatcher(IsEqual.equalTo(payload));
 	}
 
 	@Factory
-	public static <T> Matcher<Message<T>> hasPayload(Matcher<T> payloadMatcher) {
-		return new PayloadMatcher<T>(payloadMatcher);
+	public static Matcher<Message<?>> hasPayload(Matcher<?> payloadMatcher) {
+		return new PayloadMatcher(payloadMatcher);
 	}
 }
