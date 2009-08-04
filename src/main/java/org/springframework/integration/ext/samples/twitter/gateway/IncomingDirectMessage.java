@@ -26,7 +26,7 @@ import org.springframework.integration.ext.samples.twitter.util.DateAdapter;
  */
 @XmlRootElement(name = "direct_message")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Table(name = "IncomingDirectMessage", uniqueConstraints = { @UniqueConstraint(columnNames = { "messageId", }) })
+@Table(name = "IncomingDirectMessage", uniqueConstraints = { @UniqueConstraint(columnNames = { "messageId" }) })
 @Entity
 @NamedQuery(name = IncomingDirectMessage.QUERY_FIND_BY_TWITTER_ID, query = "from IncomingDirectMessage where messageId = ?")
 public class IncomingDirectMessage implements ControlCommand, Serializable {
@@ -136,8 +136,9 @@ public class IncomingDirectMessage implements ControlCommand, Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringCreator(this).append("messageId", messageId).append("senderScreenName",
-				senderScreenName).append("text", text).append("recipientScreenName",
-				recipientScreenName).append("messageCreated", messageCreated).toString();
+		return new ToStringCreator(this).append("messageId", messageId).append(
+				"senderScreenName", senderScreenName).append("text", text)
+				.append("recipientScreenName", recipientScreenName).append(
+						"messageCreated", messageCreated).toString();
 	}
 }

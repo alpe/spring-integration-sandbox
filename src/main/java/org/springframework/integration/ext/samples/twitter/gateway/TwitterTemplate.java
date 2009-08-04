@@ -12,7 +12,6 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.http.CommonsHttpRequestExecutor;
 import org.springframework.integration.http.HttpResponse;
 import org.springframework.stereotype.Component;
@@ -34,13 +33,14 @@ public class TwitterTemplate {
 	 * @param userName
 	 * @param password
 	 */
-	@Autowired
 	public TwitterTemplate(String userName, String password) {
 		executor = new CommonsHttpRequestExecutor();
 		HttpClient httpClient = executor.getHttpClient();
 		httpClient.getParams().setAuthenticationPreemptive(true);
-		Credentials defaultcreds = new UsernamePasswordCredentials(userName, password);
-		httpClient.getState().setCredentials(new AuthScope("twitter.com", 80, AuthScope.ANY_REALM),
+		Credentials defaultcreds = new UsernamePasswordCredentials(userName,
+				password);
+		httpClient.getState().setCredentials(
+				new AuthScope("twitter.com", 80, AuthScope.ANY_REALM),
 				defaultcreds);
 
 	}
@@ -50,15 +50,19 @@ public class TwitterTemplate {
 		HttpResponse response = executor.executeRequest(SimpleGetRequest
 				.create("http://twitter.com/direct_messages.xml")); // ?since_id=12345
 		String contentType = response.getFirstHeader("Content-Type");
-		if (contentType == null || !contentType.toLowerCase().contains("application/xml")) {
-			throw new IllegalStateException("Unexpected content type: " + contentType);
+		if (contentType == null
+				|| !contentType.toLowerCase().contains("application/xml")) {
+			throw new IllegalStateException("Unexpected content type: "
+					+ contentType);
 		}
 		if (!contentType.contains("charset=utf-8")) {
-			throw new IllegalStateException("Unexcepted encoding: " + contentType);
+			throw new IllegalStateException("Unexcepted encoding: "
+					+ contentType);
 		}
 		DocumentBuilderFactory builder = DocumentBuilderFactory.newInstance();
 		builder.setNamespaceAware(true);
-		Document result = builder.newDocumentBuilder().parse(new InputSource(response.getBody()));
+		Document result = builder.newDocumentBuilder().parse(
+				new InputSource(response.getBody()));
 		return result;
 	}
 
@@ -69,9 +73,11 @@ public class TwitterTemplate {
 	 * @throws HttpException
 	 * @throws Exception
 	 */
-	public void sendDirectMessage(String recipient, String text) throws HttpException, IOException {
+	public void sendDirectMessage(String recipient, String text)
+			throws HttpException, IOException {
 		log.debug("sending a direct message to: " + recipient);
-		PostMethod post = new PostMethod("http://twitter.com/direct_messages/new.xml");
+		PostMethod post = new PostMethod(
+				"http://twitter.com/direct_messages/new.xml");
 		NameValuePair[] data = { new NameValuePair("user", recipient),
 				new NameValuePair("text", text) };
 		post.setRequestBody(data);
