@@ -1,0 +1,20 @@
+Amazon SQS
+----------
+
+* SOAP Client
+* SecurityHandler
+* Transactional message receive
+
+Run ant generate.sqs to build java classes from wsdl. 
+Edit your credentials in sqs.properties
+Using a pre created queue "sqsQueue1".
+
+
+Submitted to Spring Integration SESIA
+See: http://jira.springframework.org/browse/SESIA-19
+
+
+I'm going to refactor this code to use the aws sdk.
+http://aws.amazon.com/sdkforjava/
+
+Thanks to Josh Long

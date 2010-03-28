@@ -24,6 +24,13 @@ Test Support
 http://www.springsource.org/spring-integration
 
 
+You can find additional SI adapters at
+* SESIA
+http://www.springsource.org/extensions/se-sia
+* Josh Long
+http://code.google.com/p/si-extensions-testbed/
+
+
 Esper integration
 -----------------
 Quote order durations via Ester framework. 
