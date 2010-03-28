@@ -48,7 +48,7 @@
 	<!-- ================================= 
           Compile               
          ================================= -->
-	<target name="compile" depends="init, resolve.compile, generate.sqs">
+	<target name="compile" depends="init, resolve.compile">
 		<javac destdir="${java.classes.dir}" debug="on" target="1.6">
 			<src path="${java.src.dir}" />
 			<classpath >
@@ -104,33 +104,5 @@
 		</junit>
 	</target>
 	
-	<!-- ================================= 
-          Generate java from wsdl              
-         ================================= -->
-	<target name="generate.sqs" depends="init, resolve.test" description="Generate amazon sqs client api.">
-		<delete dir="${amazon.sqs.generate.src.dir}" />
-        <mkdir dir="${build.junk.dir}"/>
-		<mkdir dir="${amazon.sqs.generate.src.dir}"/>
-        	<exec executable="${wsimport.exec}">
-        		<env key="VMARGS" value="-Xmx256m" />
-        		<arg value="-quiet" />
-        		<arg value="-keep" />
-        		<arg line="-d ${build.junk.dir}" />
-        		<arg line="-s ${amazon.sqs.generate.src.dir}" />
-        		<arg value="${amazon.sqs.wsdl}"/>
-        	</exec>
-		<!--        	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-        		<classpath>
-        			<path refid="test.classpath" />
-        			<fileset dir="${unresolved.lib.dir}" includes="*.jar"/>
-        		</classpath>
-        	</taskdef>
-        	
-		<xjc destdir="${amazon.sqs2.generate.dir}" extension="true" removeOldOutput="yes" package="com.xerox.amazonws.typica.sqs2.jaxb">
-			<schema dir="${basedir}/wsdl" includes="QueueService.wsdl"/>
-			<produces dir="${amazon.sqs2.generate.dir}/com/xerox/amazonws/typica/sqs2/jaxb" includes="**/"/>
-		</xjc>
--->		
-	</target>
 	
 </project>
