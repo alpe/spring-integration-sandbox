@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+			http://www.springframework.org/schema/integration/stream
+			http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd
+		    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+     	 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<annotation-config />
+	<context:property-placeholder location="classpath:/sqs.properties" />
+
+	<channel id="sqsQueue1" />
+	<stream:stdout-channel-adapter id="deliveries"
+		append-newline="true" />
+
+	<beans:bean id="sqsTemplate"
+		class="org.springframework.integration.sqs.SQSSOAPTemplate">
+		<beans:constructor-arg value="${access.key.id}" />
+		<beans:constructor-arg value="${access.key.secret}" />
+	</beans:bean>
+
+	<beans:bean id="sqsInChannelAdapter"
+		class="org.springframework.integration.sqs.SQSInboundGateway">
+		<beans:property name="queueName" value="blaName2" />
+		<beans:property name="template" ref="sqsTemplate" />
+	</beans:bean>
+
+	<!--
+		Construct Atomikos UserTransactionManager, needed to configure Spring
+	-->
+	<beans:bean id="atomikosTransactionManager"
+		class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init"
+		destroy-method="close">
+
+		<!--
+			when close is called, should we force transactions to terminate or
+			not?
+		-->
+		<beans:property name="forceShutdown" value="false" />
+	</beans:bean>
+
+	<!--
+		Also use Atomikos UserTransactionImp, needed to configure Spring
+	-->
+	<beans:bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+		<beans:property name="transactionTimeout" value="300" />
+	</beans:bean>
+
+	<!--
+		Configure the Spring framework to use JTA transactions from Atomikos
+	-->
+	<beans:bean id="transactionManager"
+		class="org.springframework.transaction.jta.JtaTransactionManager">
+		<beans:property name="transactionManager" ref="atomikosTransactionManager" />
+		<beans:property name="userTransaction" ref="atomikosUserTransaction" />
+	</beans:bean>
+
+
+	<inbound-channel-adapter id="inboundGateway"
+		ref="sqsInChannelAdapter" channel="deliveries">
+		<poller max-messages-per-poll="30">
+			<interval-trigger interval="2" time-unit="SECONDS" />
+			<transactional transaction-manager="transactionManager" />
+		</poller>
+	</inbound-channel-adapter>
+
+	<beans:bean id="sqsOutChannelAdapter"
+		class="org.springframework.integration.sqs.SQSOutboundGateway">
+		<beans:property name="queueName" value="blaName2" />
+		<beans:property name="template" ref="sqsTemplate" />
+		<beans:property name="extractPayload" value="false" />
+	</beans:bean>
+
+
+	<outbound-channel-adapter id="outboundGateway"
+		channel="sqsQueue1" method="handleMessage" ref="sqsOutChannelAdapter" />
+
+</beans:beans>

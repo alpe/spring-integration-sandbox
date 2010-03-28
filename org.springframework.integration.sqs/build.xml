@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.springframework.integration.sqs">
+
+	<property file="${basedir}/../build.properties" />
+	<import file="${basedir}/../build-se-spring-integration-adapters/package-bundle.xml" />
+	<import file="${basedir}/../spring-build/standard/default.xml" />
+
+	<!-- ================================= 
+	          Generate java from wsdl              
+	         ================================= -->
+	<property file="${basedir}/build-generate.properties" />
+	<target name="generate-sqs" depends="ivy.init, resolve.compile, compile.init, jar.init" description="Generate amazon sqs client api from wsdl.">
+		<!-- do not delete java source folder.<delete dir="${amazon.sqs.generate.src.dir}" /> -->
+		<mkdir dir="${build.junk.dir}" />
+		<mkdir dir="${amazon.sqs.generate.src.dir}" />
+		<exec executable="${wsimport.exec}">
+			<env key="VMARGS" value="-Xmx256m" />
+			<arg value="-quiet" />
+			<arg value="-keep" />
+			<arg line="-d ${build.junk.dir}" />
+			<arg line="-s ${amazon.sqs.generate.src.dir}" />
+			<arg value="${amazon.sqs.wsdl}" />
+		</exec>
+		<compile classpath.id="compile.classpath" input.dir="${amazon.sqs.generate.src.dir}" output.dir="${main.output.dir}"
+				resources.dir="${main.resources.dir}"/>
+	</target>
+</project>
